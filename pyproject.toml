@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "n2elite-ng"
+version = "1.0.0"
+description = "Cross-platform manager for the N2 Elite / Amiiqo USB dongle (offline)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "PolyForm-Noncommercial-1.0.0" }
+authors = [{ name = "Jona" }]
+keywords = ["amiibo", "n2elite", "amiiqo", "ntag215", "nfc", "mfrc522"]
+classifiers = [
+    "Environment :: X11 Applications",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "pyserial>=3.5",
+    "pycryptodome>=3.20",
+]
+
+[project.urls]
+Homepage = "https://github.com/jonaaaa/N2Elite-ng"
+Repository = "https://github.com/jonaaaa/N2Elite-ng"
+Issues = "https://github.com/jonaaaa/N2Elite-ng/issues"
+
+[project.scripts]
+n2elite-ng = "n2elite.cli:main"
+
+[project.gui-scripts]
+n2elite-ng-gui = "n2elite.gui:main"
+
+[tool.setuptools]
+packages = ["n2elite", "n2elite.amiibo"]
+
+[tool.setuptools.package-data]
+"n2elite.amiibo" = ["amiibo_db.json"]
+"n2elite" = ["assets/*.png", "assets/*.ico"]

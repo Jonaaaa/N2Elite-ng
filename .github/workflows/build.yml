@@ -1,0 +1,41 @@
+# Build genuine native standalone binaries for Linux and Windows.
+# This is the reliable cross-platform path (each OS builds on its own runner).
+# Not pushed anywhere yet — ready for when the repo goes public.
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: n2elite-linux
+            binary: dist/n2elite-ng
+          - os: windows-latest
+            artifact: n2elite-windows
+            binary: dist/n2elite-ng.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps + PyInstaller
+        run: |
+          python -m pip install -U pip pyinstaller
+          pip install -e .
+      - name: Run tests
+        shell: bash
+        run: |
+          for t in tests/test_*.py; do echo "== $t"; python "$t"; done
+      - name: Build binary
+        run: pyinstaller --noconfirm --clean n2elite.spec
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.binary }}

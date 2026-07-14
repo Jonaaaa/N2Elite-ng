@@ -1,0 +1,36 @@
+# --- SECURITY / PRIVACY: never commit secrets or personal dumps ---
+# Nintendo amiibo keys (copyrighted, user-supplied). NEVER commit.
+key_retail.bin
+*.bin
+unfixed-info.bin
+locked-secret.bin
+keys/
+# User amiibo dumps / device backups (personal data)
+dumps/
+backups/
+*.nfc
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Scratch / captured serial logs may contain device IDs
+captures/
+*.cap
+
+# Claude Code session/harness state (not project code)
+.claude/*.lock
+.claude/scheduled_tasks.lock
+
+# Private dev journal — kept locally, not published
+docs/LOG.md
