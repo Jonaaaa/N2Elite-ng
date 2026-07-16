@@ -1,4 +1,5 @@
 # N2Elite-ng
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE)
 
 An open-source, cross-platform (Windows / Linux / macOS) manager for the
 **N2 Elite / Amiiqo USB reader-writer** — a modern, fully offline replacement for
