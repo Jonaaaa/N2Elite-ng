@@ -17,6 +17,6 @@ upstream offline tests, checks GUI startup, and tests the packaged CLI's crypto
 round-trip and database lookup with synthetic data. Device writes and bank
 management are not covered by those tests.
 
-This fork adds macOS packaging and build/release automation. Original credits
+This release adds macOS packaging and build/release automation. Original credits
 and the upstream `LICENSE` are retained. No Nintendo keys or personal dumps
 are included. See the repository for source and rebuild instructions.

@@ -1,8 +1,7 @@
 N2Elite-ng — macOS distribution
 
-Original application by Jona: https://github.com/Jonaaaa/N2Elite-ng
-macOS packaging maintained in: https://github.com/lanxinger/N2Elite-ng
-Downloads: https://github.com/lanxinger/N2Elite-ng/releases/latest
+Application by Jona: https://github.com/Jonaaaa/N2Elite-ng
+Downloads: https://github.com/Jonaaaa/N2Elite-ng/releases
 
 INSTALL
 1. Choose the ZIP for your Mac: arm64 for Apple silicon (M1 and newer), or
@@ -36,7 +35,7 @@ These checks do not verify physical device writes or bank management.
 No Nintendo keys or personal amiibo dumps are included.
 
 CREDITS AND LICENSES
-The original application and credits are preserved. This fork adds native
+The original application and credits are preserved. The macOS distribution adds native
 macOS packaging, build/run scripts, and macOS CI/release automation.
 See LICENSE, THIRD_PARTY_NOTICES.md, and licenses/ for terms and credits.
 SOURCE-COMMIT.txt identifies the source commit used for this package.

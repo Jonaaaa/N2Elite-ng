@@ -1,11 +1,6 @@
 # N2Elite-ng
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE)
 
-**macOS distribution fork:** [Download the latest macOS release](https://github.com/lanxinger/N2Elite-ng/releases/latest)
-for **Apple silicon or Intel**. This fork adds macOS app/CLI packaging, repeatable
-build scripts, and CI/release automation to [Jona's original project](https://github.com/Jonaaaa/N2Elite-ng).
-Original application credits and `LICENSE` are retained.
-
 An open-source, cross-platform (Windows / Linux / macOS) manager for the
 **N2 Elite / Amiiqo USB reader-writer** — a modern, fully offline replacement for
 the abandoned "N2 Manager" application.
@@ -72,15 +67,15 @@ Linux serial access: add your user to the `dialout` group
 
 ### macOS
 
-Download a ready-to-run package from [Releases](https://github.com/lanxinger/N2Elite-ng/releases/latest).
+Download published macOS packages from [Releases](https://github.com/Jonaaaa/N2Elite-ng/releases).
 Choose `arm64` for Apple silicon or `x86_64` for Intel, unzip, and drag
 `N2Elite-ng.app` to Applications. These builds are ad-hoc signed and not
 Apple-notarized; see [first-launch instructions](docs/macos-README.txt).
 
-To build from source, clone this fork and enter its directory:
+To build from source, clone the repository and enter its directory:
 
 ```bash
-git clone https://github.com/lanxinger/N2Elite-ng.git
+git clone https://github.com/Jonaaaa/N2Elite-ng.git
 cd N2Elite-ng
 ```
 
