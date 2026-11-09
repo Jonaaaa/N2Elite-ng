@@ -15,7 +15,16 @@ def main():
     cli = str(ROOT / "dist/macos/n2elite-ng-cli")
     subprocess.run([cli, "--version"], check=True, timeout=30)
     subprocess.run([cli, "--help"], check=True, capture_output=True, timeout=30)
-    subprocess.run([cli, "ports"], check=True, timeout=30)
+    ports = subprocess.run(
+        [cli, "ports"], capture_output=True, text=True, timeout=30,
+    )
+    no_ports = (
+        ports.returncode == 1 and ports.stdout.strip() == "No serial ports found."
+        and not ports.stderr
+    )
+    if not no_ports:
+        ports.check_returncode()
+    print(ports.stdout)
     spec = importlib.util.spec_from_file_location(
         "crypto_tests", ROOT / "tests/test_amiibo_crypto.py"
     )
