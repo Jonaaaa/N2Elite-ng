@@ -1,0 +1,9 @@
+# Versions used for the verified Apple silicon build (Python 3.12).
+altgraph==0.17.5
+macholib==1.16.4
+packaging==26.3
+pycryptodome==4.4.0
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.9
+pyserial==3.5
+setuptools==84.2.1
