@@ -1,4 +1,4 @@
-# N2Elite-ng — build system (Linux + Windows), Python base + Tkinter GUI.
+# N2Elite-ng — build system (Linux + Windows + macOS), Python base + Tkinter GUI.
 #
 #   make install       install app + deps into ./.venv (editable)
 #   make gui           launch the GUI
@@ -6,6 +6,7 @@
 #   make test          run the offline test suite
 #   make build-linux   standalone Linux binary  -> dist/n2elite-ng
 #   make build-windows standalone Windows .exe   -> dist/windows/n2elite-ng.exe (needs Wine)
+#   make build-macos   macOS .app + CLI          -> dist/macos/ (needs Python with Tk)
 #   make dist          build for the current OS
 #   make clean         remove build artifacts
 
@@ -16,14 +17,14 @@ PYBIN   := $(BIN)/python
 PIP     := $(BIN)/pip
 
 .DEFAULT_GOAL := help
-.PHONY: help venv install gui run test build-linux build-windows dist clean distclean
+.PHONY: help venv install gui run test build-linux build-windows build-macos dist clean distclean
 
 help:  ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
 		awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
 venv:  ## create the virtualenv
-	$(PY) -m venv $(VENV)
+	test -x $(PYBIN) || $(PY) -m venv $(VENV)
 	$(PIP) install -q -U pip
 
 install: venv  ## install the app and its dependencies (editable)
@@ -47,11 +48,18 @@ build-linux: install  ## build a standalone Linux binary -> dist/n2elite-ng
 build-windows:  ## build a standalone Windows .exe via Wine -> dist/windows/
 	./tools/build_windows.sh
 
+build-macos:  ## build a native macOS .app bundle and standalone CLI -> dist/macos/
+	./tools/build_macos.sh
+
 dist:  ## build for the current OS
 ifeq ($(OS),Windows_NT)
 	@$(MAKE) build-windows
 else
+ifeq ($(shell uname -s),Darwin)
+	@$(MAKE) build-macos
+else
 	@$(MAKE) build-linux
+endif
 endif
 
 clean:  ## remove build artifacts

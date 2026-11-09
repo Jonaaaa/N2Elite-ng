@@ -1,0 +1,5 @@
+Runtime license texts copied without modification from upstream sources:
+
+pyserial-LICENSE.txt: https://github.com/pyserial/pyserial/blob/v3.5/LICENSE.txt
+Tcl-license.terms: https://github.com/tcltk/tcl/blob/core-9-0-2/license.terms
+Tk-license.terms: https://github.com/tcltk/tk/blob/core-9-0-2/license.terms

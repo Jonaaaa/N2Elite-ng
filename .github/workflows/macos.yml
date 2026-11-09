@@ -1,0 +1,87 @@
+name: macOS build and release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ["macos-v*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: macOS ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+            python-arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+            python-arch: x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          architecture: ${{ matrix.python-arch }}
+      - name: Verify native build architecture
+        env:
+          EXPECTED_ARCH: ${{ matrix.arch }}
+        run: test "$(uname -m)" = "$EXPECTED_ARCH"
+      - name: Build macOS app and CLI
+        env:
+          PYTHON: python
+        run: make build-macos
+      - name: Run offline tests
+        run: |
+          for test in tests/test_*.py; do
+            .venv/bin/python "$test"
+          done
+      - name: Check the standalone CLI
+        run: .venv/bin/python tools/smoke_macos.py
+      - name: Check the standalone app launches
+        run: |
+          open -n dist/macos/N2Elite-ng.app
+          sleep 5
+          pgrep -x N2Elite-ng
+          pkill -x N2Elite-ng
+      - name: Package release ZIP and checksum
+        run: ./tools/package_macos.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: N2Elite-ng-macOS-${{ matrix.arch }}
+          path: dist/releases/*
+          if-no-files-found: error
+
+  release:
+    name: Publish macOS release
+    if: startsWith(github.ref, 'refs/tags/macos-v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: N2Elite-ng-macOS-*
+          path: dist/releases
+          merge-multiple: true
+      - name: Publish verified macOS packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat dist/releases/*.sha256 > dist/releases/SHA256SUMS.txt
+          gh release create "$GITHUB_REF_NAME" \
+            --verify-tag \
+            --title "N2Elite-ng $GITHUB_REF_NAME" \
+            --notes-file docs/macos-release-notes.md \
+            dist/releases/*.zip dist/releases/SHA256SUMS.txt

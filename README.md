@@ -1,6 +1,11 @@
 # N2Elite-ng
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE)
 
+**macOS distribution fork:** [Download the latest macOS release](https://github.com/lanxinger/N2Elite-ng/releases/latest)
+for **Apple silicon or Intel**. This fork adds macOS app/CLI packaging, repeatable
+build scripts, and CI/release automation to [Jona's original project](https://github.com/Jonaaaa/N2Elite-ng).
+Original application credits and `LICENSE` are retained.
+
 An open-source, cross-platform (Windows / Linux / macOS) manager for the
 **N2 Elite / Amiiqo USB reader-writer** — a modern, fully offline replacement for
 the abandoned "N2 Manager" application.
@@ -36,6 +41,7 @@ make gui            # launch the graphical app
 make run ARGS="read -o tag.bin"   # run the CLI
 make test           # run the offline test suite
 make build-linux    # -> dist/n2elite-ng         (standalone, no Python needed)
+make build-macos    # -> dist/macos/N2Elite-ng.app + n2elite-ng-cli
 make build-windows  # -> dist/windows/n2elite-ng.exe  (via Wine; see tools/build_windows.sh)
 make clean
 ```
@@ -52,15 +58,50 @@ binaries above if you don't want a Python environment at all.
 > Note the naming: the double-click **binary** `n2elite-ng` is the GUI, while the
 > venv **command** `n2elite-ng` is the CLI. Most people use only one.
 
-**Native binaries for both OSes:** `make build-linux` builds on Linux;
+**Native binaries:** `make build-linux` builds on Linux;
 `make build-windows` cross-builds via **64-bit** Wine using a portable Python —
 no 32-bit Wine libraries or host changes needed (see `tools/build_windows.sh`).
 The most reliable path is the included CI workflow
 (`.github/workflows/build.yml`), which builds genuine Linux **and** Windows
-binaries on their own runners.
+binaries on their own runners. The separate
+[`macOS build and release` workflow](.github/workflows/macos.yml) builds Apple
+silicon and Intel packages, tests them, and publishes downloads for `macos-v*` tags.
 
 Linux serial access: add your user to the `dialout` group
 (`sudo usermod -aG dialout $USER`, then re-login) rather than running as root.
+
+### macOS
+
+Download a ready-to-run package from [Releases](https://github.com/lanxinger/N2Elite-ng/releases/latest).
+Choose `arm64` for Apple silicon or `x86_64` for Intel, unzip, and drag
+`N2Elite-ng.app` to Applications. These builds are ad-hoc signed and not
+Apple-notarized; see [first-launch instructions](docs/macos-README.txt).
+
+To build from source, clone this fork and enter its directory:
+
+```bash
+git clone https://github.com/lanxinger/N2Elite-ng.git
+cd N2Elite-ng
+```
+
+Use Python 3.12 with working Tkinter (`python3.12 -c 'import tkinter'`).
+`make build-macos` creates a local `.venv` when needed, installs pinned build
+dependencies, and builds a native app for the Mac's architecture. Set
+`PYTHON=/path/to/python3.12` to select a different Tk-enabled interpreter.
+The `.app` and CLI bundle Python, Tcl/Tk, crypto, serial support, and the offline
+database; they do not need Python or Homebrew installed to run.
+
+Open `dist/macos/N2Elite-ng.app`, or run `dist/macos/n2elite-ng-cli --help`.
+`./script/build_and_run.sh` rebuilds and launches the app; add `--verify` to check
+that it stays running. The included Codex environment provides a Run action.
+These local builds are ad-hoc signed, without Apple notarization.
+
+Run the offline tests with `make test`, and test the packaged CLI with
+`.venv/bin/python tools/smoke_macos.py`. Create a shareable ZIP and checksum
+with `./tools/package_macos.sh`; output is under `dist/releases/`.
+On GitHub, pushes and pull requests to `main` build both architectures.
+To publish a release after CI passes, push a tag such as `macos-v1.0.0-1`;
+the release job runs only after both native builds and their checks succeed.
 
 ## Usage
 ```bash
